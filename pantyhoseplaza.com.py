@@ -2,6 +2,13 @@
 import urllib2, base64, sys, re, os, json
 from bs4 import BeautifulSoup
 
+class outputcolors:
+	OKGREEN = '\033[92m'
+	OKBLUE = '\033[94m'
+	WARNING = '\033[93m'
+	FAIL = '\033[91m'
+	ENDC = '\033[0m'
+
 def ensureDir(f):
 	if not os.path.exists(f):
 		os.makedirs(f)
@@ -18,7 +25,10 @@ def fileDlWithAuth(url, auth, dir, prepend):
 		pass
 	if os.path.exists(dir + fileName):
 		if os.stat(dir + fileName).st_size == fileSize:
+			print(prepend + outputcolors.OKBLUE + "File already downloaded!" + outputcolors.ENDC)
 			return
+	else:
+		print(prepend + outputcolors.WARNING + "File downloaded but not fully! Restarting download..." + outputcolors.ENDC)
 	fileHandle = open(dir + fileName, 'wb')
 	print (prepend + ("Downloading: %s Bytes: %s" % (fileName, "???" if (fileSize == -1) else fileSize)))
 	fileSizeDl = 0
@@ -34,7 +44,7 @@ def fileDlWithAuth(url, auth, dir, prepend):
 		status = status + chr(8)*(len(status) + 1)
 		print status,
 	fileHandle.close()
-	print("")
+	print(prepend + outputcolors.OKGREN + "Done :)" + outputcolors.ENDC)
 
 if len(sys.argv) < 3:
 	print("Scraping script for pantyhoseplaza.com porn size.")
@@ -82,4 +92,4 @@ for table in rootSoup.findAll('table', { "bgcolor" : "#1d1d1d" }):
 			trueVidSoup = BeautifulSoup(trueVidResult, "lxml")
 			trueVideoDownloadUrl = baseUrl + trueVidSoup.find('a', text="Click here to download the full length video!")['href']
 			print("\t\t\tVIDEO SOURCE URL: " + trueVideoDownloadUrl)
-			fileDlWithAuth(trueVideoDownloadUrl, base64string, dirName + "/", "\t")
+			fileDlWithAuth(trueVideoDownloadUrl, base64string, dirName + "/", "\t\t\t")
