@@ -1,4 +1,5 @@
-import urllib2, base64, sys, re, os
+#!/usr/bin/env python
+import urllib2, base64, sys, re, os, json
 from bs4 import BeautifulSoup
 
 def ensureDir(f):
@@ -31,10 +32,11 @@ def fileDlWithAuth(url, auth, dir, prepend):
 if len(sys.argv) < 3:
 	print("Scraping script for pantyhoseplaza.com porn size.")
 	print("Usage:\n\tpython pantyhoseplaza.com.py pageNumber username password")
-
+	sys.exit()
 username = sys.argv[2]
 password = sys.argv[3]
 baseUrl = "http://www.pantyhoseplaza.com/members/"
+baseDir = "/mnt/san/"
 regex = re.compile(".*Format.*")
 
 request = urllib2.Request(baseUrl + "content.php?show=videos&section=37&page=" + sys.argv[1])
@@ -49,7 +51,7 @@ for table in rootSoup.findAll('table', { "bgcolor" : "#1d1d1d" }):
 	name = anchor.text.strip()
 	videoUrl = baseUrl + anchor['href']
 	description = table.findAll('tr')[1].find('div').text.strip()
-	dirName = "/mnt/san/pantyhoseplaza.com/" + name.replace(":", "")
+	dirName = baseDir + "pantyhoseplaza.com/" + name.replace(":", "")
 	ensureDir(dirName)
 	print(name + "\n\t" + videoUrl)
 	requestVid = urllib2.Request(videoUrl)
@@ -59,6 +61,9 @@ for table in rootSoup.findAll('table', { "bgcolor" : "#1d1d1d" }):
 	imageUrl = baseUrl + vidSoup.find('img', { "style" : "border-color:#990000" })['src']
 	print("\tIMAGE: " + imageUrl)
 	fileDlWithAuth(imageUrl, base64string, dirName + "/", "\t")
+	data = {'Name' : name, 'Description' : description}
+	with open(dirName + 'data.json', 'w') as outfile:
+    		json.dump(data, outfile)
 	for vidDiv in vidSoup.findAll('div'):
 		if regex.match(vidDiv.text.strip()):
 			trueVideoUrl = baseUrl + vidDiv.find('a')['href']
