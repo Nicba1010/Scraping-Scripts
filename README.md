@@ -12,6 +12,9 @@ The script needs three parameters passed:
 The script downloads JSON-ized data, the thumbnail and videos in all qualities.
 If you have any suggestions submit a pull request!
 
+**IF ANY ERRORS POPUP RERUN THE SCRIPT, IF THEY KEEP OCURRING SUBMIT AN ISSUE**
+Thx :)
+
 ## Donate
 If you like my work and want to donate here's the button! :)
 Actually there is no button. I have a personal PayPal account and can't set it up.
