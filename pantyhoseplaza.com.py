@@ -44,7 +44,7 @@ def fileDlWithAuth(url, auth, dir, prepend):
 		status = status + chr(8)*(len(status) + 1)
 		print status,
 	fileHandle.close()
-	print(prepend + outputcolors.OKGREN + "Done :)" + outputcolors.ENDC)
+	print(prepend + outputcolors.OKGREEN + "Done :)" + outputcolors.ENDC)
 
 if len(sys.argv) < 3:
 	print("Scraping script for pantyhoseplaza.com porn size.")
