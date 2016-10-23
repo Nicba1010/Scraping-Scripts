@@ -65,7 +65,7 @@ for table in rootSoup.findAll('table', { "bgcolor" : "#1d1d1d" }):
 	print("\tIMAGE: " + imageUrl)
 	fileDlWithAuth(imageUrl, base64string, dirName + "/", "\t")
 	data = {'Name' : name, 'Description' : description}
-	with open(dirName + 'data.json', 'w') as outfile:
+	with open(dirName + '/data.json', 'w') as outfile:
     		json.dump(data, outfile)
 	for vidDiv in vidSoup.findAll('div'):
 		if regex.match(vidDiv.text.strip()):
