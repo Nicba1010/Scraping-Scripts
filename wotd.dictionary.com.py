@@ -13,9 +13,10 @@ def dlForDate(singleDate):
 
 if (len(sys.argv) < 2) or sys.argv[1] == "--help":
 	print("Scraping script for dictionary.com/wordoftheday/ first WOTD: 1999/5/3")
-	print("Usage:\n\tpython wotd.dictionary.com.py \"/mnt/what/ever/directory/\"")
+	print("Usage:\n\tAll until today: python wotd.dictionary.com.py \"/mnt/what/ever/directory/\"")
 	print("\tSpecific date: python wotd.dictionary.com.py \"/mnt/what/ever/directory/\" yyyy/mm/dd -single")
 	print("\tDate range: python wotd.dictionary.com.py \"/mnt/what/ever/directory/\" yyyy/mm/dd yyyy/mm/dd")
+	sys.exit()
 
 startDate = date(1999, 5, 3)
 endDate = date.today()
