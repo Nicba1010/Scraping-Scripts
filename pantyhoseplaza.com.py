@@ -10,9 +10,12 @@ def fileDlWithAuth(url, auth, dir, prepend):
 	request = urllib2.Request(url)
 	request.add_header("Authorization", "Basic %s" % auth)
 	u = urllib2.urlopen(request)
-	fileHandle = open(dir + fileName, 'wb')
 	meta = u.info()
 	fileSize = int(meta.getheaders("Content-Length")[0])
+	if os.path.exists(dir + fileName):
+		if os.stat(dir + fileName).st_size == fileSize:
+			return
+	fileHandle = open(dir + fileName, 'wb')
 	print (prepend + ("Downloading: %s Bytes: %s" % (fileName, fileSize)))
 	fileSizeDl = 0
 	blockSize = 65536
