@@ -80,7 +80,6 @@ for i in range(roundDownTo(startDoc, 50), documentTotal if roundUpTo(endDoc, 50)
 		theXMLUrl = singleDocumentSoup.find('td', text=re.compile(r'METS XML View')).parent.nextSibling.nextSibling.find('a')['href']
 		print("\t\tXML Url: \t" + str(theXMLUrl))
 		if not simple:
-			print "Not simple"
 			ensureDir(baseDir + blockQuotes[0].text.strip() + "/" + blockQuotes[1].text.strip() + "/")
 		fileDl(theXMLUrl, baseDir if simple else (baseDir + blockQuotes[0].text.strip() + "/" + blockQuotes[1].text.strip() + "/"), "\t\t\t")
 		theXMLId = theJP2Url.split('/')[-1][:-4]
