@@ -14,6 +14,7 @@ def usage():
 	print("\t-h, --help\tShows this text")
 	print("\t--from\t\tStart at the given document number")
 	print("\t--to\t\tEnd with the given document number")
+	print("\t--save-dir=\tStore at this location")
 
 startDoc = 0
 endDoc = -1

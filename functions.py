@@ -44,7 +44,7 @@ def fileDl(url, dir, prepend, fileName = "?"):
         if os.path.exists(dir + fileName):
                 if os.stat(dir + fileName).st_size == fileSize:
                         print(prepend + outputcolors.OKBLUE + "File already downloaded!" + outputcolors.ENDC)
-                        return
+                        return 42
         	else:
                 	print(prepend + outputcolors.WARNING + "File downloaded but not fully! Restarting download..." + outputcolors.ENDC)
 	else:
@@ -79,7 +79,7 @@ def fileDlWithAuth(url, auth, dir, prepend):
         if os.path.exists(dir + fileName):
                 if os.stat(dir + fileName).st_size == fileSize:
                         print(prepend + outputcolors.OKBLUE + "File already downloaded!" + outputcolors.ENDC)
-                        return
+                        return 42
         	else:
                 	print(prepend + outputcolors.WARNING + "File downloaded but not fully! Restarting download..." + outputcolors.ENDC)
 	else:
