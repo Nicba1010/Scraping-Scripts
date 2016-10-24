@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import urllib2, os
+import urllib2, os, sys, math
 from bs4 import BeautifulSoup
 from datetime import timedelta, date
 
@@ -10,12 +10,29 @@ class outputcolors:
         FAIL = '\033[91m'
         ENDC = '\033[0m'
 
+def roundUpTo(x, base):
+	return int(base * math.ceil(float(x) / base))
+
+def roundDownTo(x, base):
+        return int(base * math.floor(float(x) / base))
+
 def ensureDir(f):
         if not os.path.exists(f):
                 os.makedirs(f)
 
-def fileDl(url, dir, prepend):
-	fileName = url.split('/')[-1]
+def replaceTab(s, tabstop = 4):
+	result = str()
+	for c in s:
+		if c == '\t':
+			while (len(result) % tabstop != 0):
+				result += ' ';
+		else:
+			result += c    
+	return result
+
+def fileDl(url, dir, prepend, fileName = "?"):
+	if fileName == "?":
+		fileName = url.split('/')[-1]
         request = urllib2.Request(url)
         u = urllib2.urlopen(request)
         meta = u.info()
@@ -28,10 +45,12 @@ def fileDl(url, dir, prepend):
                 if os.stat(dir + fileName).st_size == fileSize:
                         print(prepend + outputcolors.OKBLUE + "File already downloaded!" + outputcolors.ENDC)
                         return
-        else:
-                print(prepend + outputcolors.WARNING + "File downloaded but not fully! Restarting download..." + outputcolors.ENDC)
+        	else:
+                	print(prepend + outputcolors.WARNING + "File downloaded but not fully! Restarting download..." + outputcolors.ENDC)
+	else:
+		print(prepend + outputcolors.WARNING + "Downloading file")
         fileHandle = open(dir + fileName, 'wb')
-        print (prepend + ("Downloading: %s Bytes: %s" % (fileName, "???" if (fileSize == -1) else fileSize)))
+        print(prepend + ("Downloading: %s Bytes: %s" % (fileName, "???" if (fileSize == -1) else fileSize)))
         fileSizeDl = 0
         blockSize = 65536
         while True:
@@ -40,11 +59,11 @@ def fileDl(url, dir, prepend):
                         break
                 fileSizeDl += len(buffer)
                 fileHandle.write(buffer)
-                status = r"%10d  [%3.2f%%]" % (fileSizeDl, -1.0 if (fileSize == -1) else (fileSizeDl * 100. / fileSize))
-                status = status + chr(8)*(len(status) + 1)
+                status = prepend + r"%12d  [%3.2f%%]" % (fileSizeDl, -1.0 if (fileSize == -1) else (fileSizeDl * 100. / fileSize))
+                status = "\r" + status 
                 print status,
         fileHandle.close()
-        print(prepend + outputcolors.OKGREEN + "Done :)" + outputcolors.ENDC)
+        print("\n" + prepend + outputcolors.OKGREEN + "Done :)" + outputcolors.ENDC)
 
 def fileDlWithAuth(url, auth, dir, prepend):
         fileName = url.split('/')[-1]
@@ -64,7 +83,7 @@ def fileDlWithAuth(url, auth, dir, prepend):
         else:
                 print(prepend + outputcolors.WARNING + "File downloaded but not fully! Restarting download..." + outputcolors.ENDC)
         fileHandle = open(dir + fileName, 'wb')
-        print (prepend + ("Downloading: %s Bytes: %s" % (fileName, "???" if (fileSize == -1) else fileSize)))
+        print(prepend + ("Downloading: %s Bytes: %s" % (fileName, "???" if (fileSize == -1) else fileSize)))
         fileSizeDl = 0
         blockSize = 65536
         while True:
@@ -73,11 +92,11 @@ def fileDlWithAuth(url, auth, dir, prepend):
                         break
                 fileSizeDl += len(buffer)
                 fileHandle.write(buffer)
-                status = r"%10d  [%3.2f%%]" % (fileSizeDl, -1.0 if (fileSize == -1) else (fileSizeDl * 100. / fileSize))
-                status = status + chr(8)*(len(status) + 1)
+		status = prepend + r"%12d  [%3.2f%%]" % (fileSizeDl, -1.0 if (fileSize == -1) else (fileSizeDl * 100. / fileSize))
+                status = "\r" + status
                 print status,
         fileHandle.close()
-        print(prepend + outputcolors.OKGREEN + "Done :)" + outputcolors.ENDC)
+        print("\n" + prepend + outputcolors.OKGREEN + "Done :)" + outputcolors.ENDC)
 
 def getSoup(url):
 	return BeautifulSoup(urllib2.urlopen(urllib2.Request(url)), "lxml")
