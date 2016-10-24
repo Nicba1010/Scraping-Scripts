@@ -11,7 +11,13 @@ class outputcolors:
         ENDC = '\033[0m'
 
 def getStatus(url):
-	urllib.urlopen(url).getcode()
+	try:
+		connection = urllib2.urlopen(url)
+		code = connection.getcode()
+		connection.close()
+		return code
+	except urllib2.HTTPError, e:
+		return e.getcode()
 
 def roundUpTo(x, base):
 	return int(base * math.ceil(float(x) / base))

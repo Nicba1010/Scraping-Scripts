@@ -31,8 +31,8 @@ There is currently one problem with the script. For any dates below 2014/03/01 i
 Options and arguments:
         -s, --simple    Constructs the simple/flat directory structure
         -h, --help      Shows this text
-        --from          Start at the given document number
-        --to            End with the given document number
+        --from=         Start at the given document number
+        --to=           End with the given document number
         --save-dir=     Store at this location
 
 ### wall.alphacoders.com.py
@@ -42,6 +42,11 @@ Options and arguments:
         -h, --help      Shows this printout
         --update        Stops at first found already downloaded
         --save-dir=     Store at this location
+
+### thechive.com.py
+*Requested by /u/Broadsid3*
+
+No options or arguments. Just run the script. I'll add them later when I have more time
 
 ## Donate
 If you like my work and want to donate here's the button! :)
