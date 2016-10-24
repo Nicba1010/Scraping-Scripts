@@ -29,19 +29,19 @@ There is currently one problem with the script. For any dates below 2014/03/01 i
 *Requested by /u/WhiskeyQuebec*
 
 Options and arguments:
-        -s, --simple    Constructs the simple/flat directory structure
-        -h, --help      Shows this text
-        --from=         Start at the given document number
-        --to=           End with the given document number
-        --save-dir=     Store at this location
+- -s, --simple    Constructs the simple/flat directory structure
+- -h, --help      Shows this text
+- --from=         Start at the given document number
+- --to=           End with the given document number
+- --save-dir=     Store at this location
 
 ### wall.alphacoders.com.py
 *Requested by myself :P*
 
 Options and arguments:
-        -h, --help      Shows this printout
-        --update        Stops at first found already downloaded
-        --save-dir=     Store at this location
+- -h, --help      Shows this printout
+- --update        Stops at first found already downloaded
+- --save-dir=     Store at this location
 
 ### thechive.com.py
 *Requested by /u/Broadsid3*
