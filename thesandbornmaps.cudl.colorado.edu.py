@@ -79,7 +79,10 @@ for i in range(roundDownTo(startDoc, 50), documentTotal if roundUpTo(endDoc, 50)
 		print("\t\tJP2 Url: \t" + theJP2Url)
 		theXMLUrl = singleDocumentSoup.find('td', text=re.compile(r'METS XML View')).parent.nextSibling.nextSibling.find('a')['href']
 		print("\t\tXML Url: \t" + str(theXMLUrl))
-		fileDl(theXMLUrl, baseDir, "\t\t\t")
+		if not simple:
+			print "Not simple"
+			ensureDir(baseDir + blockQuotes[0].text.strip() + "/" + blockQuotes[1].text.strip() + "/")
+		fileDl(theXMLUrl, baseDir if simple else (baseDir + blockQuotes[0].text.strip() + "/" + blockQuotes[1].text.strip() + "/"), "\t\t\t")
 		theXMLId = theJP2Url.split('/')[-1][:-4]
 		print("\t\tXML ID: \t" + theXMLId)
 		xmlSoup = getSoup(theXMLUrl)
@@ -90,4 +93,4 @@ for i in range(roundDownTo(startDoc, 50), documentTotal if roundUpTo(endDoc, 50)
 		print("\t\tHeight: \t" + str(imageHeight))
 		finalUrl = theJP2Url + "&x=0&y=0&width=" + str(imageWidth) + "&height=" + str(imageHeight)
 		print("\t\tFinal Url: \t" + finalUrl)
-		fileDl(finalUrl, baseDir, "\t\t\t")
+		fileDl(finalUrl, baseDir if simple else (baseDir + blockQuotes[0].text.strip() + "/" + blockQuotes[1].text.strip() + "/"), "\t\t\t", theXMLId + ".jp2")

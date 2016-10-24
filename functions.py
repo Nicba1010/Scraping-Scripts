@@ -48,7 +48,7 @@ def fileDl(url, dir, prepend, fileName = "?"):
         	else:
                 	print(prepend + outputcolors.WARNING + "File downloaded but not fully! Restarting download..." + outputcolors.ENDC)
 	else:
-		print(prepend + outputcolors.WARNING + "Downloading file")
+		print(prepend + outputcolors.WARNING + "Downloading file..." + outputcolors.ENDC)
         fileHandle = open(dir + fileName, 'wb')
         print(prepend + ("Downloading: %s Bytes: %s" % (fileName, "???" if (fileSize == -1) else fileSize)))
         fileSizeDl = 0
@@ -80,9 +80,11 @@ def fileDlWithAuth(url, auth, dir, prepend):
                 if os.stat(dir + fileName).st_size == fileSize:
                         print(prepend + outputcolors.OKBLUE + "File already downloaded!" + outputcolors.ENDC)
                         return
-        else:
-                print(prepend + outputcolors.WARNING + "File downloaded but not fully! Restarting download..." + outputcolors.ENDC)
-        fileHandle = open(dir + fileName, 'wb')
+        	else:
+                	print(prepend + outputcolors.WARNING + "File downloaded but not fully! Restarting download..." + outputcolors.ENDC)
+	else:
+                print(prepend + outputcolors.WARNING + "Downloading file..." + outputcolors.ENDC)	
+	fileHandle = open(dir + fileName, 'wb')
         print(prepend + ("Downloading: %s Bytes: %s" % (fileName, "???" if (fileSize == -1) else fileSize)))
         fileSizeDl = 0
         blockSize = 65536
