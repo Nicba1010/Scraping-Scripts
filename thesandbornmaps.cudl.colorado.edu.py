@@ -12,8 +12,8 @@ def usage():
 	print("Options available: ")
 	print("\t-s, --simple\tConstructs the simple/flat directory structure")
 	print("\t-h, --help\tShows this text")
-	print("\t--from\t\tStart at the given document number")
-	print("\t--to\t\tEnd with the given document number")
+	print("\t--from=\t\tStart at the given document number")
+	print("\t--to=\t\tEnd with the given document number")
 	print("\t--save-dir=\tStore at this location")
 
 startDoc = 0
@@ -51,20 +51,21 @@ print str(documentTotal) + " documents to download. Let's get started!"
 if endDoc == -1:
 	endDoc = documentTotal
 
-documetNum = 1
+documentNum = 1 + roundDownTo(startDoc, 50)
 print("Scanning range from " + str(roundDownTo(startDoc, 50)) + " to " + str(documentTotal if roundUpTo(endDoc, 50) > documentTotal else roundUpTo(endDoc, 50)))
 for i in range(roundDownTo(startDoc, 50), documentTotal if roundUpTo(endDoc, 50) > documentTotal else roundUpTo(endDoc, 50), 50):
 	print("Documents " + str(i) + " to " + str(i+50))
 	groupSoup = getSoup(baseUrl + str(i))
 	for mediaContainer in groupSoup.findAll('div', { "class" : "mediaContainer" }):
-		if documetNum < startDoc:
-			documetNum += 1
+		if documentNum < startDoc:
+			documentNum += 1
+			print("Skiping Document " + str(documentNum))
 			continue
-		elif documetNum > endDoc:
+		elif documentNum > endDoc:
 			print("My job here is done!")
 			sys.exit(420)
-		print("\tDocument " + str(documetNum))
-		documetNum += 1
+		print("\tDocument " + str(documentNum))
+		documentNum += 1
 		blockQuotes = mediaContainer.findAll('blockquote')
 		try:
 			print("\t\tCity: \t\t" + blockQuotes[0].text.strip())
@@ -78,12 +79,19 @@ for i in range(roundDownTo(startDoc, 50), documentTotal if roundUpTo(endDoc, 50)
 		theJavaScript = singleDocumentSoup.find('div', { "class" : "controlStrip" }).nextSibling.nextSibling
 		theJP2Url = str(theJavaScript).split("openPdfInWindow")[1].splitlines()[5].strip()[11:-38]
 		print("\t\tJP2 Url: \t" + theJP2Url)
-		theXMLUrl = singleDocumentSoup.find('td', text=re.compile(r'METS XML View')).parent.nextSibling.nextSibling.find('a')['href']
+		theXMLUrl = ""
+		theXMLId = theJP2Url.split('/')[-1][:-4]
+		if theXMLId == "bou00003":
+			theXMLUrl = "http://ucblibraries.colorado.edu/systems/digitalinitiatives/xml/bou00.xml"
+		else:
+			try:
+				theXMLUrl = singleDocumentSoup.find('td', text=re.compile(r'METS XML View')).parent.nextSibling.nextSibling.find('a')['href']
+			except TypeError:
+				theXMLUrl = raw_input("\t\tThe XML is not valid, check the page manually and try to find the real XML file, input the url here: ")
 		print("\t\tXML Url: \t" + str(theXMLUrl))
 		if not simple:
 			ensureDir(baseDir + blockQuotes[0].text.strip() + "/" + blockQuotes[1].text.strip() + "/")
 		fileDl(theXMLUrl, baseDir if simple else (baseDir + blockQuotes[0].text.strip() + "/" + blockQuotes[1].text.strip() + "/"), "\t\t\t")
-		theXMLId = theJP2Url.split('/')[-1][:-4]
 		print("\t\tXML ID: \t" + theXMLId)
 		xmlSoup = getSoup(theXMLUrl)
 		admId = xmlSoup.find('filegrp').find('file', { "id" : theXMLId })['admid']

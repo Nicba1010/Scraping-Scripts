@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import urllib2, os, sys, math
+import urllib2, os, sys, math, urllib
 from bs4 import BeautifulSoup
 from datetime import timedelta, date
 
@@ -9,6 +9,9 @@ class outputcolors:
         WARNING = '\033[93m'
         FAIL = '\033[91m'
         ENDC = '\033[0m'
+
+def getStatus(url):
+	urllib.urlopen(url).getcode()
 
 def roundUpTo(x, base):
 	return int(base * math.ceil(float(x) / base))
