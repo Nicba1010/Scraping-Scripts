@@ -46,7 +46,8 @@ Options and arguments:
 ### thechive.com.py
 *Requested by /u/Broadsid3*
 
-No options or arguments. Just run the script. I'll add them later when I have more time
+No options or arguments. Just run the script. I'll add them later when I have more time.
+All posts with no valid date format will be stored to NonParsable folder.
 
 ## Donate
 If you like my work and want to donate here's the button! :)
