@@ -51,4 +51,5 @@ All posts with no valid date format will be stored to NonParsable folder.
 
 ## Donate
 If you like my work and want to donate here's the button! :)
-Actually there is no button. I have a personal PayPal account and can't set it up.
+Actually there is no button. I have a personal PayPal account and can't set it up. 
+Here's the email instead: nicba1010@gmail.com
