@@ -40,9 +40,23 @@ for page in range(0, lastPage + 1):
 		url = h3.find('a')['href']
 		if any(x in name for x in filter):
 			print("\tName: " + name + "\n\t\tDate: " + date)
-			ensureDir(baseDir + name + "/")
+			dateFolder = "NonParsable/"
+			try:
+				dateFolder = datetime.strptime(date, '%b %d, %Y').strftime("%Y/%m/%d/")
+			except ValueError:
+				print("\t\tGoing to NonParsable folder")
+			ensureDir(baseDir + dateFolder + name + "/")
 			postSoup = getSoup(url)
 			for countTag in postSoup.findAll('div', { "class" : "count-tag" }):
-				imgSrc = countTag.parent.find('img')['src'].split('?')[0] + "?quality=100"
-				print("\t\t\tImage" + countTag.text + ": " + imgSrc)
-				fileDl(imgSrc, baseDir + name + "/", "\t\t\t\t", countTag.parent.find('img')['src'].split('?')[0].split('/')[-1])
+				try:
+					img = countTag.parent.find('img')
+					imgSrc = img['src'].split('?')[0] + "?quality=100"
+					imgName = img['src'].split('?')[0].split('/')[-1]
+					if any(x in img['class'] for x in { "gif-animate" }):
+						imgSrc = img['data-gifsrc'].split('?')[0]
+						imgName = img['data-gifsrc'].split('?')[0].split('/')[-1]
+					print("\t\t\tImage" + countTag.text + ": " + imgSrc)
+					fileDl(imgSrc, baseDir + dateFolder + name + "/", "\t\t\t\t", imgName)
+				except:
+					
+					pass
