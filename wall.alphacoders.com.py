@@ -41,7 +41,19 @@ def processWallpaper(url):
 	wallpaperOriginalUrl = wallpaperSoup.find('span', { "class" : "btn btn-success download-button" })['data-href']
 	sys.stdout.write("\t\tOriginal Wallpaper Url: " + wallpaperOriginalUrl + "\n\t\t\t")
 	categories = wallpaperSoup.find('div', { "class" : "floatright" }).findAll('strong')
-	fileName = wallpaperOriginalUrl.split('/')[-4] + "." + wallpaperOriginalUrl.split('/')[-2]
+	name = wallpaperSoup.find('div', {'class': 'container center'}).find('div').text.strip().replace("/",".")
+	tags = wallpaperSoup.findAll('div', {'style': 'padding:5px 10px; margin:1px; display:inline-block;'})
+	tagArray = [None]*len(tags)
+	taglist = ""
+	index = 0
+	if len(tags) > 0:
+		for tag in tags:
+			tagArray[index] = tag.text.strip()
+			index += 1
+	tagArray.sort()
+	for tag in tagArray:
+		taglist += "[" + tag + "]"
+	fileName = taglist + name + ((" " if len(taglist) > 0 else "") if len(name) == 0 else " - ") + wallpaperOriginalUrl.split('/')[-4]  + "." + wallpaperOriginalUrl.split('/')[-2]
 	directoryStructure = baseDir
 	for i in range(0, len(categories)):
 		sys.stdout.write(categories[i].text.strip() + ("" if i == (len(categories) - 1) else " => "))

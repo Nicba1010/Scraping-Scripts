@@ -74,6 +74,7 @@ def fileDl(url, dir, prepend, fileName = "?"):
                 print status,
         fileHandle.close()
         print("\n" + prepend + outputcolors.OKGREEN + "Done :)" + outputcolors.ENDC)
+	return 1
 
 def fileDlWithAuth(url, auth, dir, prepend):
         fileName = url.split('/')[-1]
