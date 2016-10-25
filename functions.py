@@ -2,6 +2,7 @@
 import urllib2, os, sys, math, urllib
 from bs4 import BeautifulSoup
 from datetime import timedelta, date
+import time
 
 class outputcolors:
         OKGREEN = '\033[92m'
@@ -110,7 +111,12 @@ def fileDlWithAuth(url, auth, dir, prepend):
         print("\n" + prepend + outputcolors.OKGREEN + "Done :)" + outputcolors.ENDC)
 
 def getSoup(url):
-	return BeautifulSoup(urllib2.urlopen(urllib2.Request(url)), "lxml")
+	try:
+		return BeautifulSoup(urllib2.urlopen(urllib2.Request(url)), "lxml")
+	except urllib2.HTTPError, e:
+		print("retrying in 5s")
+		time.sleep(5)
+		return getSoup(url)
 
 def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
