@@ -71,6 +71,8 @@ last_page = int(int(latest_soup.find('a', { 'title' : "End" })['href'].split('='
 base_gallery_url = base_url + "index.php/latest-updates.html?start="
 
 for page in range(last_page + 1):
+	if page <6:
+		continue
 	gallery_page_url = base_gallery_url + str(page * 45)
 	gallery_page = ensureLoad(gallery_page_url, session)
 	gallery_page_soup = BeautifulSoup(gallery_page.content, 'lxml')
@@ -84,9 +86,13 @@ for page in range(last_page + 1):
 		is_video = True if item_type == "Lynda Leigh Video Update" else False
 		item_url = base + item.find('a', { 'class' : 'uk-thumbnail' })['href']
 		item_text_part = item.find('div', { 'class' : 'uk-thumbnail-caption' })
-		item_title = item_text_part.findAll('strong')[0].text.strip()
+		item_title = item_text_part.findAll('strong')[0].text.strip().replace('/', " of ")
 		item_desc = item_text_part.find('span', { 'style' : ['font-size: 8pt; line-height: 6px;', 'font-size:9pt;', 'font-size: 8pt; line-height: 5px;', 'font-size: 9pt'] }).text.strip()
-		item_date = (datetime.strptime(item_text_part.find(text=re.compile(r'ADDED')).parent.nextSibling.strip(), "%d-%b-%y")).strftime("%Y-%m-%d")
+		item_date = ""
+		try:
+			item_date = (datetime.strptime(item_text_part.find(text=re.compile(r'ADDED')).parent.nextSibling.strip(), "%d-%b-%y")).strftime("%Y-%m-%d")
+		except ValueError:
+			item_date = (datetime.strptime(item_text_part.find(text=re.compile(r'ADDED')).parent.nextSibling.strip(), "%d-%m-%y")).strftime("%Y-%m-%d")
 		print('Page {:2d} item {:2d}\n\tType: \t{}\n\tTitle: \t{}\n\tDesc: \t{}'.format(page + 1, item_num, item_type, item_title, item_desc))
 		#print("Page " + str(page + 1) + " item " + str(item_num) + "\nType: \t" + item_type + "\nTitle: \t" + item_title + "\nDesc: \t" + item_desc)
 		info = {'isvideo': is_video, 'url': item_url, 'name': item_title, 'description': item_desc, 'date': item_date, 'size': 0}
@@ -120,7 +126,7 @@ for page in range(last_page + 1):
 											high_res_dl = base + item_page_soup.find(text='HD MPEG 808mb').parent['href']
 										except AttributeError:
 											try:
-												high_res_dl = base + item_page_soup.find('source')['src']
+												high_res_dl = item_page_soup.find('source')['src']
 											except AttributeError:
 												print("ERROR")
 												exit()
