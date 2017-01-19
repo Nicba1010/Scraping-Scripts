@@ -52,9 +52,10 @@ base = "http://lyndaleigh.com"
 base_url = base + "/members/"
 session = requests.Session()
 
-username = "mdavis63"#input("Username: ")
-password = "tornado"#getpass.getpass("Password: ")
-DEBUG = True
+username = input("Username: ")
+password = getpass.getpass("Password: ")
+DEBUG = False
+basefolder = input("Save Folder: ")
 
 session.auth = (username, password)
 
@@ -71,17 +72,12 @@ last_page = int(int(latest_soup.find('a', { 'title' : "End" })['href'].split('='
 base_gallery_url = base_url + "index.php/latest-updates.html?start="
 
 for page in range(last_page + 1):
-	if page <6:
-		continue
 	gallery_page_url = base_gallery_url + str(page * 45)
 	gallery_page = ensureLoad(gallery_page_url, session)
 	gallery_page_soup = BeautifulSoup(gallery_page.content, 'lxml')
 	item_num = 0
 	for item in gallery_page_soup.findAll('div', { 'class' : 'itemContainer' }):
-		#print(item.prettify())
 		item_num = item_num + 1
-		#if item_num < 35:
-		#	continue
 		item_type = item.findAll('img', { 'class' : 'uk-responsive-width uk-align-center' })[0]['alt']
 		is_video = True if item_type == "Lynda Leigh Video Update" else False
 		item_url = base + item.find('a', { 'class' : 'uk-thumbnail' })['href']
@@ -94,7 +90,6 @@ for page in range(last_page + 1):
 		except ValueError:
 			item_date = (datetime.strptime(item_text_part.find(text=re.compile(r'ADDED')).parent.nextSibling.strip(), "%d-%m-%y")).strftime("%Y-%m-%d")
 		print('Page {:2d} item {:2d}\n\tType: \t{}\n\tTitle: \t{}\n\tDesc: \t{}'.format(page + 1, item_num, item_type, item_title, item_desc))
-		#print("Page " + str(page + 1) + " item " + str(item_num) + "\nType: \t" + item_type + "\nTitle: \t" + item_title + "\nDesc: \t" + item_desc)
 		info = {'isvideo': is_video, 'url': item_url, 'name': item_title, 'description': item_desc, 'date': item_date, 'size': 0}
 		item_page = ensureLoad(item_url, session, "\t")
 		item_page_soup = BeautifulSoup(item_page.content, 'lxml')
@@ -130,12 +125,10 @@ for page in range(last_page + 1):
 											except AttributeError:
 												print("ERROR")
 												exit()
-												#print(item_page_soup.prettify())
-												#print(str(len(item_page_soup.prettify())))
 			except KeyError:
 				high_res_dl = base + item_page_soup.find(text='1080p MPEG').parent['href']
 			if len(high_res_dl):
-				directory = "/mnt/san/ly/" + item_date + " " + item_title + "/"
+				directory = basefolder + item_date + " " + item_title + "/"
 				ensureDir(directory)
 				header = fileDL(high_res_dl, directory + item_title + ".undef", session)
 				info['size'] = header.get('content-length')
@@ -162,7 +155,7 @@ for page in range(last_page + 1):
 							print(item_page_soup.prettify())
 							print(str(len(item_page_soup.prettify())))
 			if len(high_res_dl):
-				directory = "/mnt/san/ly/" + item_date + " - Gallery - " + item_title + "/"
+				directory = basefolder + item_date + " - Gallery - " + item_title + "/"
 				ensureDir(directory)
 				header = fileDL(high_res_dl, directory + item_title + ".undef", session)
 				info['size'] = header.get('content-length')
