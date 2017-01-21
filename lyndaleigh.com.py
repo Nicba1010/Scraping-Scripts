@@ -54,7 +54,7 @@ session = requests.Session()
 
 username = input("Username: ")
 password = getpass.getpass("Password: ")
-DEBUG = False
+DEBUG = True
 basefolder = input("Save Folder: ")
 
 session.auth = (username, password)
